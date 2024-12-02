@@ -32,7 +32,7 @@ def view_cart(request):
     # Prepare cart data to display
     cart_data = [(product, cart.get_item_qty(product.id)) for product in items_in_cart]
 
-    return render(request, "view_cart.html", {
+    return render(request, "cart/view_cart.html", {
         "cart_data": cart_data,
         "subtotal": subtotal,
         "taxes": taxes,
@@ -154,8 +154,11 @@ def checkout_page(request):
             payment = create_paypal_payment(total)  # Create PayPal payment
             if payment:
                 return redirect(payment.links[1].href)  # Redirect to PayPal
+        #if the method is cash on delivery
+        if payment_method == 'cod':
+            pass
 
-    return render(request, 'core/checkout.html', {
+    return render(request, 'cart/checkout.html', {
         'cart_data': cart_items,
         'subtotal': subtotal,
         'taxes': taxes,

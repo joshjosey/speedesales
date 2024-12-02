@@ -15,7 +15,7 @@ from core.models import Product, Category, Vendor,ProductImages
 # Landing Page View
 class LandingPageView(View):
     def get(self, request):
-        return render(request, 'landingpage/landing.html')
+        return render(request, 'core/landing.html')
 
 # Index View to Display Products
 def index(request):

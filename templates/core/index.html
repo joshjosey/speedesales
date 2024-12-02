@@ -1,12 +1,10 @@
-{% extends 'core/base.html' %}
+{% extends 'components/base.html' %}
 {% block content %}
-{% include 'core/category_carousel.html' %}
+{% include 'components/category_carousel.html' %}
 {% load static %}
 
 <!-- Featured Products -->
 <div class="container">
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-
     <h1 class="text-center text-white mt-5">Featured Products</h1>
     <div id="featured-products" class="container align-items-center mt-5">
 
@@ -49,10 +47,10 @@
                             </div>
                             <div class="card-body">
                                 <!-- Add to cart-->
-                                <button type="button" value="{{product.id}}" data-index="{{product.id}}"class="btn btn-warning add-to-cart">
+                                <button type="button" value="{{product.id}}" data-index="{{product.id}}"class="btn btn-warning add-to-cart small-button">
                                     Add to Cart
                                 </button>
-                                <a href="#" style="text-decoration: none;"><button type="button" class="btn btn-primary add-to-cart">
+                                <a href="#" style="text-decoration: none;"><button type="button" class="btn btn-primary small-button">
                                     See Details
                                 </button></a>
                             </div>
@@ -63,7 +61,9 @@
             </div>
             {% endfor %}
         </div>
-
+        <div id="alert-badge" class="alert alert-primary alert-dismissible fade" role="alert" style="position: fixed; bottom: 20px; right: 20px; z-index: 1050;">
+            placeholder
+        </div>
     </div>
 </div>
 
@@ -73,7 +73,7 @@
     $(document).ready(function() {
         // Automatically hide the alert after 5 seconds
         setTimeout(function() {
-            $('#user-status-badge').alert('close');
+            $('#alert-badge').alert('close');
         }, 5000);
     });
     //look for button
@@ -97,13 +97,11 @@
                 document.getElementById('cart-count').textContent = '(' + json.qty + ')'
 
                 //Success badge
-                document.getElementById('cart-badge').textContent = "Item added to cart."
-                $('#cart-badge').addClass('show');
-                $('#cart-badge').addClass('alert-success');
+                document.getElementById('alert-badge').textContent = "Item added to cart."
+                $('#alert-badge').addClass('show alert-success');
                 // Hide after 5 seconds
                 setTimeout(function () {
-                    $('#cart-badge').removeClass('show');
-                    $('#cart-badge').removeClass('alert-success');
+                    $('#alert-badge').removeClass('show alert-success');
                 }, 5000);
             },
 
@@ -111,13 +109,11 @@
                 console.log("Error adding to cart")
 
                 //error badge
-                document.getElementById('cart-badge').textContent = "Unable to add item to cart."
-                $('#cart-badge').addClass('show');
-                $('#cart-badge').addClass('alert-danger');
+                document.getElementById('alert-badge').textContent = "Unable to add item to cart."
+                $('#alert-badge').addClass('show alert-danger');
                 // Hide after 5 seconds
                 setTimeout(function () {
-                    $('#cart-badge').removeClass('show');
-                    $('#cart-badge').removeClass('alert-danger');
+                    $('#alert-badge').removeClass('show alert-danger');
                 }, 5000);
             }
         });

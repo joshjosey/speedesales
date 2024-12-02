@@ -539,17 +539,15 @@ footer {
 }
 
 /* Add to cart button styling */
-.add-to-cart {
+.small-button {
     padding: 10px 20px;
     font-size: 14px;
     color: #fff;
-    background-color: #007bff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
-.add-to-cart:hover {
-    background-color: #0056b3;
+.small-button:hover {
+    border: #d1ecf1;
 }

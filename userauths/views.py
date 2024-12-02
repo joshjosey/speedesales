@@ -17,27 +17,27 @@ def registration_page(request):
         if form.is_valid():
             new_user = form.save()    
             username = form.cleaned_data.get("username")    
-            messages.success(request, f"Hey {username}, Your Account Was Created Successfullly.")
+            messages.success(request, f"Hi {username}, Your Account Was Created Successfullly.")
             new_user = authenticate(username = form.cleaned_data.get("email"),  
                                     password = form.cleaned_data.get("password1"))
             login(request, new_user)
             return redirect("core:index")
     else:
-        print("User Cannot Be Registered")
+        print("Error registering User")
         form = UserRegisterForm()
 
 
     context = {
         'form': form
     }
-    return render(request, 'userauths/sign-up.html', context)
+    return render(request, 'authentication/sign-up.html', context)
 
 def login_page(request):
     if not request.user.is_authenticated and 'next' in request.GET:
         messages.error(request, "You must be logged in to log out.")  # Error message for unauthorized logout attempt
 
     if request.user.is_authenticated:
-        messages.warning(request, f"Hey you're already logged in.")
+        messages.warning(request, f"You are already logged in.")
         return redirect("core:index")  # Redirect if already authenticated
 
     if request.method == "POST":
@@ -48,7 +48,7 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            messages.success(request, "Successfully logged in.")
+            messages.success(request, "Log in successful.")
             return redirect("core:index")
         else:
             # Assuming email is not found or password is incorrect
@@ -57,10 +57,10 @@ def login_page(request):
     context = {
 
     }
-    return render(request, "userauths/sign-in.html")
+    return render(request, "authentication/sign-in.html")
 
-@login_required(login_url='userauths:login_page')  # Redirects to login page if not logged in.
+@login_required(login_url='authentication:login_page')  # Redirects to login page if not logged in.
 def logout_page(request):
     logout(request)
     messages.success(request, "Logged Out Successfully.")
-    return redirect("userauths:login_page")
+    return redirect("authentication:login_page")
