@@ -40,6 +40,10 @@ class CartOrderItems(models.Model):
 
 
 class Address(models.Model):
+    order = models.OneToOneField(CartOrder,  on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    address = models.CharField(max_length=200, null=True)
+    send_to = models.CharField(max_length=200, null=True)
+    address = models.CharField(max_length=200)
+    city = models.CharField(max_length=200, null=True)
+    zipCode = models.CharField(max_length=25)
     status = models.BooleanField(default=False)

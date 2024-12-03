@@ -82,7 +82,7 @@
                 </div>
 
                 <!-- Payment Button -->
-                <button type="submit" id="payment-button" class="btn btn-info text-white mt-3 w-100">Payment</button>
+                <button type="submit" id="payment-button" class="btn btn-info text-white mt-3 w-100">Submit</button>
             </form>
         </div>
     </div>
@@ -97,6 +97,10 @@
             url: "{% url 'cart:checkout' %}",
             data: {
                 paymentMethod: $(`#paymentMethod`).val(),
+                fullName: $(`#fullName`).val(),
+                address: $(`#address`).val(),
+                city: $(`#city`).val(),
+                zipCode: $(`#zipCode`).val(),
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 action: 'post'
             },

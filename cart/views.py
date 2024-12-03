@@ -12,7 +12,7 @@ import paypalrestsdk
 from .cart import Cart
 from core.models import Product
 from userauths.models import User
-from .models import CartOrder, CartOrderItems
+from .models import CartOrder, CartOrderItems, Address
 
 # Ensure PayPal SDK is configured
 paypalrestsdk.configure({
@@ -27,7 +27,7 @@ def view_cart(request):
 
     # Get the items in the cart
     items_in_cart = cart.get_items()
-    subtotal = cart.get_price()
+    subtotal = round(cart.get_price(),2)
     taxes = round(subtotal * 0.0825, 2)
     total = round(subtotal + taxes, 2)
     qty = cart.get_qty()
@@ -171,7 +171,10 @@ def checkout_page(request):
             for product,quantity,price in cart_items:
                 order_prod = CartOrderItems(order=order,product=product,qty=quantity, unit_price=product.price, total_price=price)
                 order_prod.save()
-        
+            #save the address for the order
+            address = Address(order=order,user=user,send_to=request.POST.get('fullName'),address=request.POST.get('address'),city=request.POST.get('city'),zipCode=request.POST.get('zipCode'))
+            address.save()
+
         #empty the cart and tell the js it was successful
         messages.success(request,("Checkout successful!"))
         cart.empty()

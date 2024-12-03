@@ -4,13 +4,14 @@
     Cart
 </h1>
 <div class="row m-3">
+    {%if cart_data %}
     <div id="cart-products" class="col-6 col-lg-8">
         <h1 class="text-center text-white mt-3">
             Items
         </h1>
         <div class="container align-items-c mt-5">
             <!--Check if the cart has items -->
-            {%if cart_data %}
+            
             <!-- If the cart has items display them with product cards-->
             {% for product, qty in cart_data %}
                     <div class="row mt-5 align-items-center justify-content-center">
@@ -66,11 +67,6 @@
                     </div>
 
             {% endfor %}
-            {% else %}
-            <h3 class="text-center text-white mt-3">
-                Your cart is empty
-            </h3>
-            {% endif %}
         </div>
     </div>
     <div id="cart-summary" class="col-6 col-lg-4 ps-5 border-start">
@@ -115,12 +111,16 @@
                     Empty Cart
                 </button>
             </div>
-            
         </div>
         <div id="cart-badge" class="alert alert-primary alert-dismissible fade" role="alert" style="position: fixed; bottom: 30px; right: 20px; z-index: 10;">
             placeholder
         </div>
     </div>
+    {% else %}
+    <h3 class="text-center text-white mt-3">
+        Your cart is empty
+    </h3>
+    {% endif %}
 </div>
 
 <!-- js/ajax to deal with button -->

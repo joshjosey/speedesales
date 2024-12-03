@@ -9,7 +9,8 @@ class CartOrderItemsAdmin(admin.ModelAdmin):
     list_filter =  ('order',)
 
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ('user', 'address', 'status')
+    list_display = ('user','order','send_to','address','city','zipCode','status')
+    list_filter = ('user','order')
 
 admin.site.register(CartOrder, CartOrderAdmin)
 admin.site.register(CartOrderItems, CartOrderItemsAdmin)

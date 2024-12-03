@@ -12,7 +12,7 @@ from django.shortcuts import render, get_object_or_404
 #imoort out models
 from userauths.models import User
 from .models import Product, Category
-from cart.models import CartOrder, CartOrderItems
+from cart.models import CartOrder, CartOrderItems, Address
 
 # Landing Page View
 class LandingPageView(View):
@@ -70,11 +70,12 @@ def view_orders(request):
     for ord in CartOrder.objects.filter(user=user):
         items = []
         subtotal = 0
+        address = Address.objects.get(order=ord)
         for item in CartOrderItems.objects.filter(order=ord):
             items.append(item)
             print(item.total_price)
             subtotal = subtotal + float(item.total_price)
-        customer_orders.append((ord,items))
+        customer_orders.append((ord,address,items))
         total_qty = len(items)
         subtotal
         taxes = round(subtotal * 0.0825, 2)
