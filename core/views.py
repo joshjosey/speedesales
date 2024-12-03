@@ -7,10 +7,12 @@ from .models import *
 import json
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.contrib.auth.models import User
-from .models import Product, Category
 from django.shortcuts import render, get_object_or_404
-from core.models import Product, Category, Vendor,ProductImages
+
+#imoort out models
+from userauths.models import User
+from .models import Product, Category
+from cart.models import CartOrder, CartOrderItems
 
 # Landing Page View
 class LandingPageView(View):
@@ -60,3 +62,27 @@ def category_list_view(request):
     return render(request, 'core/category-list.html', context)
 
 
+def view_orders(request):
+    user = User.objects.get(id=request.user.id)
+    total_price = -1
+    total_qty = -1
+    customer_orders = []
+    for ord in CartOrder.objects.filter(user=user):
+        items = []
+        subtotal = 0
+        for item in CartOrderItems.objects.filter(order=ord):
+            items.append(item)
+            print(item.total_price)
+            subtotal = subtotal + float(item.total_price)
+        customer_orders.append((ord,items))
+        total_qty = len(items)
+        subtotal
+        taxes = round(subtotal * 0.0825, 2)
+        total_price = round(subtotal + taxes, 2)
+    
+    return render(request, 'core/orders.html', {'customer_orders':customer_orders,'total_qty':total_qty, 'total_price':total_price})
+
+def view_details(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    return render(request, 'core/detailed_product.html',{'product':product})

@@ -21,8 +21,8 @@ def user_directory_path(instance, filename):
 
 class Category(models.Model):
     cid = ShortUUIDField(unique=True, length=10, max_length=20, prefix="cat", alphabet="abcdefgh12345")
-    title = models.CharField(max_length=100, default="Food")
-    image = models.ImageField(upload_to='category', default="category.jpg")
+    title = models.CharField(max_length=100, unique=True)
+    image = models.ImageField(upload_to='category', default="placeholder.jpg")
 
     class Meta:
         verbose_name_plural = 'Categories'
@@ -62,14 +62,14 @@ class Vendor(models.Model):
 
 class Product(models.Model):
     pid = ShortUUIDField(unique=True, length=10, max_length=20, prefix="prd", alphabet="abcdefgh12345")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True)
-    title = models.CharField(max_length=100, default="Speed-e-sales-products")
-    image = models.ImageField(upload_to=user_directory_path, default="product.jpg")
-    description = models.TextField(null=True, blank=True, default="This is the product")
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=1.99)
-    old_price = models.DecimalField(max_digits=10, decimal_places=2, default=2.99)
+    title = models.CharField(max_length=100, default="Speed-e-sales Product")
+    image = models.ImageField(upload_to='uploads/product/', default='placeholder.jpg')
+    description = models.TextField(null=True, blank=True, default="Placeholder")
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    old_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True, blank=True)
     specifications = models.TextField(null=True, blank=True)
     tags = models.ForeignKey(Tags, on_delete=models.SET_NULL, null=True, blank=True)
     product_status = models.CharField(choices=STATUS, max_length=10, default="in_review")
@@ -96,7 +96,7 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
-
+'''
 class ProductImages(models.Model):
     images = models.ImageField(upload_to="product-images", default="product.jpg")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -105,3 +105,4 @@ class ProductImages(models.Model):
     class Meta:
         verbose_name_plural = 'Product Images'
 
+'''

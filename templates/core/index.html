@@ -12,6 +12,7 @@
         <div class="products-container">
             {% for product in featured_products %}
             <div class="product-card">
+
                 <div class="product-image">
                     <img src="{{ product.image.url }}" alt="{{ product.title }}">
                     {% if product.old_price and product.old_price > product.price %}
@@ -21,6 +22,9 @@
                     {% endif %}
                 </div>
                 <div class="product-details">
+                    <div class="badge bg-info text-white">
+                        Featured Product
+                    </div>
                     <p class="category">{{ product.category.title }}</p>
                     <h3>{{ product.title }}</h3>
                     <p class="description">{{ product.description }}</p>
@@ -50,7 +54,7 @@
                                 <button type="button" value="{{product.id}}" data-index="{{product.id}}"class="btn btn-warning add-to-cart small-button">
                                     Add to Cart
                                 </button>
-                                <a href="#" style="text-decoration: none;"><button type="button" class="btn btn-primary small-button">
+                                <a href="{% url 'core:view_details' product.id %}" style="text-decoration: none;"><button type="button" class="btn btn-primary small-button">
                                     See Details
                                 </button></a>
                             </div>

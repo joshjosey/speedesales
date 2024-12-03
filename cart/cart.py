@@ -15,6 +15,10 @@ class Cart():
         # Make the cart global to the site
         self.cart = cart
 
+
+    '''
+    Method to add an item into the cart
+    '''
     def add(self, product, quantity):
         product_id = str(product.id)
 
@@ -38,17 +42,26 @@ class Cart():
         # Mark the session as modified
         self.session.modified = True
 
+    '''
+    Method to calculte the total quantity of items in the cart
+    '''
     def get_qty(self):
         qty = 0
         for item in self.cart:
             qty += int(self.cart[item]['qty'])
         return qty
 
+    '''
+    Method to calculte the total price of items in the cart
+    ''' 
     def get_item_qty(self, product_id):
         if str(product_id) in self.cart:
             return self.cart[str(product_id)]['qty']
         return 0
 
+    '''
+    Method to update a product in the cart
+    '''
     def get_price(self):
         price = 0.00
         for item in self.cart:
@@ -60,6 +73,9 @@ class Cart():
         items_in_cart = Product.objects.filter(id__in=item_ids)
         return items_in_cart
 
+    '''
+    Method to update a product in the cart
+    '''
     def update(self, product, quantity):
         product_id = str(product.id)
 
@@ -80,6 +96,10 @@ class Cart():
         # Mark the session as modified
         self.session.modified = True
 
+
+    '''
+    Method to remove an item from the cart
+    '''
     def remove(self, product):
         product_id = str(product.id)
 
@@ -89,3 +109,11 @@ class Cart():
         # Mark the session as modified
         self.session.modified = True
         return removed_item
+    
+    '''
+    Method to empty cart
+    '''
+    def empty(self):
+        self.cart.clear()
+        self.session.modified = True
+        print("Cart emptied")

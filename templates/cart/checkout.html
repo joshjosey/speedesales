@@ -77,16 +77,47 @@
                     <select id="paymentMethod" name="paymentMethod" class="form-control">
                         <option value="paypal">PayPal</option>
                         <option value="credit-card">Credit Card</option>
-                        <option value="cod">Cash on Delivery</option>
+                        <option selected value="cod">Cash on Delivery</option>
                     </select>
                 </div>
 
                 <!-- Payment Button -->
                 <button type="submit" id="payment-button" class="btn btn-info text-white mt-3 w-100">Payment</button>
-                
             </form>
         </div>
     </div>
 </div>
+<!-- js/ajax to deal with button -->
+<script>
+    //look for button
+    $(document).on('click','#payment-button', function(inp){
+        inp.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cart:checkout' %}",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
+            },
+            
+            success: function(json){
+                // Redirect to index page on success
+                console.log('Checkout successful');
+                window.location.href = "{% url 'core:index' %}";
+            },
+
+            error: function(){
+                console.log("Error checking out")
+                //error badge
+                document.getElementById('cart-badge').textContent = "Unable to checkout."
+                $('#cart-badge').addClass('show alert-danger');
+                // Hide after 5 seconds
+                setTimeout(function () {
+                    $('#cart-badge').removeClass('show alert-danger');
+                }, 5000);
+            }
+        });
+    });
+</script>
 
 {% endblock %}

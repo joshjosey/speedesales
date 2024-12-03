@@ -1,15 +1,18 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from .cart import Cart
-from core.models import Product
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
-from .models import CartOrder, CartOrderItems
 from decimal import Decimal
 from django.conf import settings
 from paypalrestsdk import Payment
 from django.urls import reverse
 import paypalrestsdk
+
+#import our models
+from .cart import Cart
+from core.models import Product
+from userauths.models import User
+from .models import CartOrder, CartOrderItems
 
 # Ensure PayPal SDK is configured
 paypalrestsdk.configure({
@@ -134,8 +137,8 @@ def empty_cart(request):
 # Checkout page view
 def checkout_page(request):
     cart = Cart(request)
+    
     cart_items = []
-
     # Get cart items and calculate prices
     items_in_cart = cart.get_items()
     for product in items_in_cart:
@@ -145,24 +148,40 @@ def checkout_page(request):
 
     subtotal = sum(item[2] for item in cart_items)
     taxes = round(subtotal * Decimal('0.0825'), 2)  # 8.25% tax
-    total = round(subtotal + taxes, 2)
+    total_price = round(subtotal + taxes, 2)
 
     # Check if PayPal is selected
     if request.method == 'POST':
+        #get the user's data
+        user = User.objects.get(id=request.user.id)
+
         payment_method = request.POST.get('paymentMethod')
         if payment_method == 'paypal':
-            payment = create_paypal_payment(total)  # Create PayPal payment
+            payment = create_paypal_payment(total_price)  # Create PayPal payment
             if payment:
                 return redirect(payment.links[1].href)  # Redirect to PayPal
-        #if the method is cash on delivery
-        if payment_method == 'cod':
+        #if the method is credit card
+        elif payment_method == 'credit-card':
             pass
+        else:
+            #create an order object and save it to the db
+            order = CartOrder(user=user, price=total_price)
+            order.save()
+            #attach the items to the order
+            for product,quantity,price in cart_items:
+                order_prod = CartOrderItems(order=order,product=product,qty=quantity, unit_price=product.price, total_price=price)
+                order_prod.save()
+        
+        #empty the cart and tell the js it was successful
+        messages.success(request,("Checkout successful!"))
+        cart.empty()
+        return JsonResponse({'success': True})
 
     return render(request, 'cart/checkout.html', {
         'cart_data': cart_items,
         'subtotal': subtotal,
         'taxes': taxes,
-        'total': total
+        'total': total_price
     })
 
 
@@ -194,10 +213,6 @@ def create_paypal_payment(total):
         # Handle the error, e.g. log the error or return None
         return None
 
-
-
-
-
 # Payment success handler
 def payment_success(request):
     payment_id = request.GET.get('paymentId')
@@ -216,7 +231,6 @@ def payment_success(request):
             'status': 'failed',
             'message': 'Payment execution failed.'
         })
-
 
 # Payment cancel handler
 def payment_cancel(request):
