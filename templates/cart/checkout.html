@@ -75,9 +75,9 @@
                 <div class="form-group mb-3">
                     <label for="paymentMethod">Payment Method:</label>
                     <select id="paymentMethod" name="paymentMethod" class="form-control">
+                        <option value="cod">Cash on Delivery</option>
                         <option value="paypal">PayPal</option>
                         <option value="credit-card">Credit Card</option>
-                        <option selected value="cod">Cash on Delivery</option>
                     </select>
                 </div>
 
@@ -96,6 +96,7 @@
             type: 'POST',
             url: "{% url 'cart:checkout' %}",
             data: {
+                paymentMethod: $(`#paymentMethod`).val(),
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 action: 'post'
             },

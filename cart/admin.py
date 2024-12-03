@@ -6,6 +6,7 @@ class CartOrderAdmin(admin.ModelAdmin):
 
 class CartOrderItemsAdmin(admin.ModelAdmin):
     list_display = ('order', 'product', 'qty', 'unit_price', 'total_price')
+    list_filter =  ('order',)
 
 class AddressAdmin(admin.ModelAdmin):
     list_display = ('user', 'address', 'status')

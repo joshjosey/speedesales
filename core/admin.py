@@ -13,7 +13,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     #inlines = [ProductImagesAdmin]
     list_display = ('title', 'user','image', 'price', 'featured', 'product_status')
-    list_filter = ('date', 'in_stock')
+    list_filter = ('date', 'in_stock', 'user')
 
 class VendorAdmin(admin.ModelAdmin):
     list_display = ('title', 'vendor_image')

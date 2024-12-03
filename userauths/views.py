@@ -59,8 +59,8 @@ def login_page(request):
     }
     return render(request, "authentication/sign-in.html")
 
-@login_required(login_url='authentication:login_page')  # Redirects to login page if not logged in.
+@login_required(login_url='userauths:login_page')  # Redirects to login page if not logged in.
 def logout_page(request):
     logout(request)
     messages.success(request, "Logged Out Successfully.")
-    return redirect("authentication:login_page")
+    return redirect("userauths:login_page")
